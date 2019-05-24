@@ -1,0 +1,25 @@
+$ echo Aa123456 > apikey.txt
+
+$ kubectl create secret generic apikey --from-file=apikey.txt
+secret "apikey" created
+
+$ kubectl describe secrets/apikey
+Name:           apikey
+Namespace:      default
+Labels:         <none>
+Annotations:    <none>
+
+Type:   Opaque
+
+Data
+====
+apikey.txt:     12 bytes
+
+$ kubectl apply -f pod.yaml
+
+$ kubectl exec -it consumesec -c shell -- bash
+[root@consumesec /]# cat /tmp/apikey/apikey.txt
+Aa123456
+
+--------------------------------------------
+$ kubectl delete pod/consumesec secret/apikey
